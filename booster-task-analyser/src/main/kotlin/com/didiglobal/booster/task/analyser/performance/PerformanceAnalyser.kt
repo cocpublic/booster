@@ -18,6 +18,7 @@ import com.didiglobal.booster.kotlinx.red
 import com.didiglobal.booster.kotlinx.search
 import com.didiglobal.booster.kotlinx.separatorsToSystem
 import com.didiglobal.booster.kotlinx.yellow
+import com.didiglobal.booster.task.analyser.compatAapt2ResSourcePath
 import com.didiglobal.booster.task.analyser.Build
 import com.didiglobal.booster.transform.ArtifactManager
 import com.didiglobal.booster.transform.asm.args
@@ -58,7 +59,8 @@ class PerformanceAnalyser(
         private val providedClasspath: Collection<File>,
         private val compileClasspath: Collection<File>,
         private val artifacts: ArtifactManager,
-        private val properties: Map<String, *> = emptyMap<String, Any>()
+        private val properties: Map<String, *> = emptyMap<String, Any>(),
+        private val sourceSetMap: Map<String, String> = emptyMap()
 ) {
 
     private val providedClasses = providedClasspath.map {
@@ -233,7 +235,7 @@ class PerformanceAnalyser(
         }.map { flat ->
             executor.submit {
                 val header = flat.metadata
-                val xml = header.sourceFile
+                val xml = header.sourceFile.compatAapt2ResSourcePath(sourceSetMap)
 
                 println("Parsing ${header.resourcePath} ...")
 

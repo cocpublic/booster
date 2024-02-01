@@ -31,10 +31,14 @@ class AnalysisVariantProcessor : VariantProcessor {
     private val classSetCache = AsmClassSetCache()
 
     override fun process(variant: BaseVariant) {
-        variant.project.gradle.projectsEvaluated { gradle ->
-            gradle.rootProject.allprojects {
-                it.setup()
-            }
+//        variant.project.gradle.projectsEvaluated { gradle ->
+//            gradle.rootProject.allprojects {
+//                it.setup()
+//            }
+//        }
+
+        variant.project.gradle.rootProject.allprojects {
+            it.setup()
         }
     }
 
@@ -58,7 +62,7 @@ class AnalysisVariantProcessor : VariantProcessor {
             tasks.register(taskName, T::class.java) {
                 it.variant = variant
                 it.classSetCache = classSetCache
-            }.dependsOn(getUpstreamProjects(false, variant).plus(this).map {
+            }.dependsOn(getUpstreamProjects(true, variant).plus(this).map {
                 it.getJarTaskProviders(variant)
             }.flatten())
         }

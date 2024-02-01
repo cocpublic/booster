@@ -28,7 +28,8 @@ open class PerformanceAnalysisTask : AnalysisTask() {
                 variant.extension.bootClasspath,
                 classpath,
                 variant.artifacts,
-                project.properties
+                project.properties,
+                sourceSetMap
         ).analyse(reportDir)
     }
 
